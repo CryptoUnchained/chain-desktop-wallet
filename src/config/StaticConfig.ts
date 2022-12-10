@@ -13,12 +13,11 @@ export const NV_GRAPHQL_API_ENDPOINT = 'https://crypto.com/nft-api/graphql';
 export const IPFS_MIDDLEWARE_SERVER_UPLOAD_ENDPOINT =
   'https://crypto.org/ipfs-middleware-server/uploads';
 export const NCW_NFT_MIDDLEWARE_SERVER_ENDPOINT =
-  'https://cronos.org/ncw-quandra-api-middleware-server/quantra/v1/nft';
+  'https://cronos.org/ncw-quandra-api-middleware-server';
 export const DEFAULT_CLIENT_MEMO = 'client:chain-desktop-app';
 export const CLOUDFLARE_TRACE_URI = 'https://www.cloudflare.com/cdn-cgi/trace';
 
-// const APP_PROTOCOL_NAME = 'cryptowallet';
-export const APP_PROTOCOL_NAME = 'ledgerlive';
+export const APP_PROTOCOL_NAME = 'cryptowallet';
 
 // This constant value is used when actual values are not known yet
 // For instance :
@@ -32,7 +31,7 @@ export const NOTIFICATION_DEV_CONFIG_FILE_URL =
 // TODO: change this when PR merged to dev
 // export const NOTIFICATION_DEV_CONFIG_FILE_URL = 'https://raw.githubusercontent.com/crypto-com/chain-desktop-wallet/dev/config/notifications/dev.json';
 export const NOTIFICATION_RELEASE_CONFIG_FILE_URL =
-  'https://raw.githubusercontent.com/crypto-com/chain-desktop-wallet/dev/config/notifications/release.json';
+  'https://raw.githubusercontent.com/crypto-com/chain-desktop-wallet/master/config/notifications/release.json';
 
 export const UNBLOCKING_PERIOD_IN_DAYS = {
   UNDELEGATION: {

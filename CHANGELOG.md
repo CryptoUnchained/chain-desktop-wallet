@@ -5,6 +5,40 @@ All notable changes to this project will be documented in this file.
 *Unreleased*
 
 *Released*
+## [v1.3.7] - 2022-12-07
+### Additions
+- Adapt to Christmas Theme
+### Bug Fixes
+- Deprecated Cronos NFT asset endpoint
+## [v1.3.6] - 2022-11-28
+### Additions
+- Update CRO & WCRO icon
+## [v1.3.5] - 2022-11-15
+### Bug Fixes
+- Total balance missing in the home page
+## [v1.3.4] - 2022-11-08
+### Additions
+- Toggle hide and show for non-whitelisted assets
+- Clear cache capability in DApp Browser
+### Bug Fixes
+- Incorrect balance & address mismatch issues on Ledger type wallet after lock screen
+- WalletConnect failure on Windows
+## [v1.3.3] - 2022-10-18
+### Bug Fixes
+- Potential staking transaction failure on Ledger
+- Increase app stability
+## [v1.3.2] - 2022-09-28
+### Additions
+- Optionalize import of Cosmos Hub ATOM in Ledger wallet
+- Revise migration flow for new assets
+- Rebrand Cronos Chain
+### Bug Fixes
+- App crash when Cosmos Hub ATOM not migrated in Bridge Transfer
+- Invalid Gas Token on various Tendermint related operations
+## [v1.3.1] - 2022-09-08
+### Bug Fixes
+- Incorrect WalletConnect URL scheme
+- Optimize certain EVM chain switching behaviors within DApps
 ## [v1.3.0] - 2022-08-24
 ### Additions
 - Ethereum Chain Support

@@ -22,10 +22,19 @@ import { AnalyticsService } from '../../service/analytics/AnalyticsService';
 import CronosDAppsTab from './components/Tabs/CronosDAppsTab';
 import ChainConfigTab from './components/Tabs/ChainConfigTab';
 
+const remote = window.require('@electron/remote');
+
 const { Header, Content } = Layout;
 const { TabPane } = Tabs;
 
 const DappList: Dapp[] = [
+  {
+    name: 'Cronos ID',
+    logo: './dapp_logos/cronos_id.png',
+    alt: 'Cronos ID',
+    description: 'Secure your domain name now!',
+    url: 'https://cronosid.xyz/',
+  },
   {
     name: 'Minted',
     logo: './dapp_logos/minted.png',
@@ -71,6 +80,7 @@ const DappPage = () => {
   const setPageLock = useSetRecoilState(pageLockState);
   const currentSession = useRecoilValue(sessionState);
   const [selectedDapp, setSelectedDapp] = useState<Dapp>();
+  const [initialDapp, setInitialDapp] = useState('');
   const [selectedURL, setSelectedURL] = useState('');
   const [selectedDomain, setSelectedDomain] = useState('');
   const [t] = useTranslation();
@@ -156,6 +166,7 @@ const DappPage = () => {
           isBookmarkButtonDisabled: false,
           isBookmarkButtonHighlighted: bookmarkButtonHighlighted,
           isExitButtonDisabled: shouldShowBrowser === false,
+          isMoreButtonDisabled: shouldShowBrowser === false,
         }}
         buttonCallbacks={{
           onBackButtonClick: () => {
@@ -167,7 +178,31 @@ const DappPage = () => {
           onRefreshButtonClick: () => {
             browserRef.current?.reload();
           },
-          onBookmarkButtonClick: () => {
+          onMoreButtonClick: async (name) => {
+            if (name === 'cleanCache') {
+              const webRef = browserRef.current?.getWebviewRef();
+              const webId = webRef?.getWebContentsId();
+              const webContents: Electron.WebContents = remote.webContents.fromId(webId);
+              // clean the initial dapp's cache incase of jump
+              if (initialDapp.length > 0) {
+                await webContents.session.clearStorageData({
+                  origin: initialDapp,
+                });
+              }
+
+              setSelectedDapp(undefined);
+              setSelectedURL('');
+              setAddressBarValue('');
+              setWebviewState('idle');
+              setWebviewNavigationState({
+                canGoBack: false,
+                canGoForward: false,
+                canRefresh: false,
+              });
+            }
+          },
+          onBookmarkButtonClick: async () => {
+
             const bookMarkInfo = browserRef.current?.getCurrentWebStatus();
             if (!bookMarkInfo?.title || !bookMarkInfo.webviewURL) {
               return;
@@ -263,6 +298,7 @@ const DappPage = () => {
                           }
 
                           setSelectedDapp(dapp);
+                          setInitialDapp(dapp.url);
                         }}
                       >
                         <div className="logo">
@@ -282,6 +318,7 @@ const DappPage = () => {
               <CronosDAppsTab
                 onClickDapp={dapp => {
                   setSelectedURL(dapp.link);
+                  setInitialDapp(dapp.link);
                 }}
               />
             </TabPane>

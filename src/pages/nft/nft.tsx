@@ -98,7 +98,7 @@ import IconPlayer from '../../svg/IconPlayer';
 import nftThumbnail from '../../assets/nft-thumbnail.png';
 
 import { useLedgerStatus } from '../../hooks/useLedgerStatus';
-import { useCronosEvmAsset, useCronosTendermintAsset } from '../../hooks/useCronosEvmAsset';
+import { useCronosEvmAsset, useCronosTendermintAsset } from '../../hooks/useAsset';
 import GasStepSelectTendermint, {
   GasInfoTendermint,
 } from '../../components/GasCustomize/Tendermint/GasConfig';
@@ -789,7 +789,7 @@ const FormMintNft = () => {
                     multiplyFee(networkFee, !isDenomIdIssued ? 2 : 1),
                     walletAsset.decimals,
                   )}{' '}
-                  {walletAsset.symbol}
+                  {walletAsset?.symbol}
                 </div>
               </div>
               <GasInfoTendermint />
@@ -804,7 +804,7 @@ const FormMintNft = () => {
                       <Content>
                         {`${t('nft.modal1.notice2')} ${getUINormalScaleAmount(
                           multiplyFee(networkFee, !isDenomIdIssued ? 2 : 1),
-                          walletAsset.decimals,
+                          walletAsset?.decimals,
                         )} ${walletAsset.symbol} ${t('nft.modal1.notice3')}`}
                       </Content>
                     </Layout>
@@ -917,7 +917,7 @@ const NftPage = () => {
     amount: '',
     memo: '',
   });
-  const currentSession = useRecoilValue(sessionState);
+  const [currentSession, setCurrentSession] = useRecoilState(sessionState);
   const [walletAsset, setWalletAsset] = useRecoilState(walletAssetState);
   const [ledgerIsExpertMode, setLedgerIsExpertMode] = useRecoilState(ledgerIsExpertModeState);
   const [nftList, setNftList] = useRecoilState(nftListState);
@@ -1116,6 +1116,10 @@ const NftPage = () => {
     if (!didMountRef.current) {
       didMountRef.current = true;
       analyticsService.logPage('NFT');
+      setCurrentSession({
+        ...currentSession,
+        activeAsset: cronosTendermintAsset,
+      });
     }
   }, [fetchingDB, nftList]);
 
@@ -1308,12 +1312,12 @@ const NftPage = () => {
                                 <Avatar
                                   style={{
                                     background: NftUtils.generateLinearGradientByAddress(
-                                      model.token_address,
+                                      model.token_address ?? (model.contract_address ?? ''),
                                     ),
                                     verticalAlign: 'middle',
                                   }}
                                 />
-                                {middleEllipsis(model.token_address, 6)}{' '}
+                                {middleEllipsis(model.token_address ?? '', 6)}{' '}
                               </>
                             }
                           />
@@ -1533,7 +1537,7 @@ const NftPage = () => {
                                 <Avatar
                                   style={{
                                     background: NftUtils.generateLinearGradientByAddress(
-                                      nft.model.token_address,
+                                      nft.model.token_address ?? '',
                                     ),
                                     verticalAlign: 'middle',
                                   }}
@@ -1554,6 +1558,12 @@ const NftPage = () => {
                               </>
                             }
                           />
+                        </div>
+                        <div className="item">
+                          <div className="subtitle">{t('nft.detailModal.subtitle')}</div>
+                          <div className="description">
+                            {nft?.model?.description ? nft?.model.description : 'n.a.'}
+                          </div>
                         </div>
                         <div className="item">
                           <div className="subtitle">{t('nft.detailModal.attributes')}</div>
@@ -1669,7 +1679,7 @@ const NftPage = () => {
                       key="submit"
                       type="primary"
                       htmlType="submit"
-                      disabled={new Big(networkFee).gt(walletAsset.balance)}
+                      disabled={new Big(networkFee).gt(walletAsset?.balance ?? 0)}
                       onClick={() => {
                         form.submit();
                       }}
@@ -1825,7 +1835,7 @@ const NftPage = () => {
                           />
                         )}
                       </Form>
-                      {new Big(networkFee).gt(walletAsset.balance) ? (
+                      {new Big(networkFee).gt(walletAsset?.balance ?? 0) ? (
                         <div className="item notice">
                           <Layout>
                             <Sider width="20px">
@@ -1834,8 +1844,8 @@ const NftPage = () => {
                             <Content>
                               {`${t('nft.modal1.notice2')} ${getUINormalScaleAmount(
                                 networkFee,
-                                walletAsset.decimals,
-                              )} ${walletAsset.symbol} ${t('nft.modal1.notice3')}`}
+                                walletAsset?.decimals,
+                              )} ${walletAsset?.symbol} ${t('nft.modal1.notice3')}`}
                             </Content>
                           </Layout>
                         </div>

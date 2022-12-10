@@ -1,8 +1,9 @@
 import WalletConnect from '@walletconnect/client';
 import { IJsonRpcRequest } from '@walletconnect/types';
+import { isString } from 'lodash';
 import { useCallback, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { hexToNumber } from 'web3-utils';
+import { hexToNumber, isHex, utf8ToHex } from 'web3-utils';
 import { EVM_MINIMUM_GAS_PRICE } from '../../config/StaticConfig';
 import { useRefCallback } from '../../hooks/useRefCallback';
 import { EVMChainConfig } from '../../models/Chain';
@@ -260,6 +261,9 @@ export const useWalletConnect = () => {
       });
 
       connector.on('call_request', async (error, payload: IJsonRpcRequest) => {
+        if(isString(payload.params[0]) && !isHex(payload.params[0])) {
+          payload.params[0] = utf8ToHex(payload.params[0]);
+        }
         handleCallRequest.current(error, payload);
       });
 
